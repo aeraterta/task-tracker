@@ -1,17 +1,9 @@
-const Pool = require('pg').Pool;
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres',
-  password: 'todolist',
-  port: 5432,
-})
+const pool = require('../db');
 
 module.exports = {
     async getList(req, res) {
         const taskList = await pool.query("SELECT * FROM tasks");
         res.status(200).send(taskList.rows);
-
     },
     async addTask(req, res) {
         //console.log(req.body);
@@ -23,7 +15,7 @@ module.exports = {
             }
             else {
                 const newTask = await pool.query("INSERT INTO tasks (taskname,taskdue,isdone,taskdone) VALUES ($1, $2, $3, $4) RETURNING *",[req.body.taskname, req.body.taskdue, req.body.isdone, req.body.taskdone]);
-                res.status(200).send('Task added!');
+                res.status(200).send(newTask.rows[0]);
                 console.log("Task added!"); 
             }
         }catch (err) {

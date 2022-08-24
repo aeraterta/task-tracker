@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  
+  db:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment: 
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=todolist
+      - POSTGRES_DB=taskdb
+    networks: 
+      - tracker
+
+  tracker_api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on: 
+      - db
+    environment: 
+      - USER=postgres
+      - HOST=db
+      - DATABASE=postgres
+      - PASSWORD=todolist
+      - PORT=5432
+    networks: 
+      - tracker
+
+  frontend:
+    build: ./react-task-tracker
+    ports:
+      - "3000:3000"
+    depends_on: 
+      - tracker_api
+    networks: 
+      - tracker 
+
+networks: 
+  tracker:

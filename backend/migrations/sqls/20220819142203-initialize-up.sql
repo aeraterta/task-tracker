@@ -7,7 +7,7 @@
 CREATE TABLE public.tasks (
 	id  serial PRIMARY KEY,
 	taskname varchar NOT NULL,
-	taskdue date NULL,
+	taskdue varchar NULL,
 	isdone bool NULL,
 	taskdone varchar NULL
 );

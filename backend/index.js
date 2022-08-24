@@ -1,15 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const Pool = require('pg').Pool;
-
+const cors = require("cors");
 const app = express();
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres',
-  password: 'todolist',
-  port: 5432,
-})
+
+var corsOptions = {
+  origin: "*"
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

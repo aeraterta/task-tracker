@@ -4,7 +4,7 @@
       "user": "postgres",
       "password": "todolist",
       "port": 5432,
-      "host": "localhost",
+      "host": "db",
       "database": "postgres"
     }
   }
