@@ -9,9 +9,11 @@ services:
     environment: 
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=todolist
-      - POSTGRES_DB=taskdb
+      - POSTGRES_DB=postgres
     networks: 
       - tracker
+    volumes:
+      - ./postgres-table-init.sql:/docker-entrypoint-initdb.d/postgres-table-init.sql
 
   tracker_api:
     build:

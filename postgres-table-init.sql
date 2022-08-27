@@ -1,10 +1,5 @@
--- public.tasks definition
-
--- Drop table
-
--- DROP TABLE public.tasks;
-
-CREATE TABLE public.tasks (
+-- Creation of tasks table
+CREATE TABLE IF NOT EXISTS tasks (
 	id  serial PRIMARY KEY,
 	taskname varchar NOT NULL,
 	taskdue varchar NULL,
