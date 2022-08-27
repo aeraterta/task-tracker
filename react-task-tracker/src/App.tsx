@@ -43,7 +43,8 @@ const App: FC = () => {
 
 const addTask = async () => {
   if (task === ""){
-    console.log("Empty task name");    
+    console.log("Error: Empty task name!")  
+    alert("Error: Empty task name!");
   }
   else {
     try{
@@ -85,9 +86,12 @@ const addTask = async () => {
 
   return (
     <div className="App">
-      <NavigationComponent></NavigationComponent>
       <div className="header">
         <div className="inputContainer">
+          <div className="pageTitle">
+            <h1>Task Tracker</h1>
+          </div>
+          <label>Task: </label>
           <input
             type="text"
             placeholder="Add Task Here!"
@@ -95,19 +99,29 @@ const addTask = async () => {
             value={task}
             onChange={handleChange}
           />
+          <label>Deadline: </label>
           <input
             type="date"
             name="deadline"
             value={deadline}
             onChange={handleChange}
           />
+          <button onClick={addTask}>Add</button>
         </div>
-        <button onClick={addTask}>Add Task</button>
+        <div className="navBar">
+          <NavigationComponent></NavigationComponent>
+        </div>
       </div>
       <div className="todoList">
-        {todoList.map((task: ITask, key: number) => {
-          return <TodoTask key={key} task={task} checkBoxChange={checkBoxChange} deleteTask={deleteTask} />;
-        })}
+        <h1>Tasks List: </h1>
+        {todoList.length !== 0 ? (
+          // <p>Here1</p>
+          todoList.map((task: ITask, key: number) => {
+            return <TodoTask key={key} task={task} checkBoxChange={checkBoxChange} deleteTask={deleteTask} />;
+        })
+        ) : (
+          <h3>No task to show</h3>
+        )}
       </div>
     </div>
   );

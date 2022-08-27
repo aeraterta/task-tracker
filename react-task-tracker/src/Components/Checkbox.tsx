@@ -9,7 +9,7 @@ interface Props {
 
 const Checkbox = (props: Props) => {
   return (
-    <div>
+    <div className = "checkBoxHandle">
       <input
         type="checkbox"
         name={props.name}

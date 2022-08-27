@@ -1,6 +1,7 @@
 import React, {ChangeEvent} from "react";
 import Checkbox from "./Checkbox";
 import { ITask } from "./Interfaces";
+import { AiFillDelete } from 'react-icons/ai';
 
 interface Props {
   task: ITask;
@@ -8,29 +9,42 @@ interface Props {
   checkBoxChange(event: ChangeEvent<HTMLInputElement>): void;
 }
 
+
 const TodoTask = ({ task, deleteTask, checkBoxChange }: Props) => {
   let idString = String(task.id);
   let checkBoxName = 'checkBox' + String(idString);
-
   return (
     <div className="task">
-      <div className="content">
-        <span>{task.taskname}</span>
-        <span>{task.taskdue}</span>
-      </div>
       <Checkbox
           name={checkBoxName} 
           handleChange={checkBoxChange}
-
           isChecked={task.isdone}
           label={idString} 
-        />
+        />      
+      <div className="content">
+
+        <div className="contentItems">
+          <label>Task: </label>
+          <div>{task.taskname}</div>
+        </div>
+
+        <div className="contentItems">
+          <label>Due: </label>
+          <div>{task.taskdue}</div>
+        </div>
+
+        <div className="contentItems">
+          <label>Done: </label>
+          <div>{task.taskdone}</div>
+        </div>
+        
+      </div>
       <button
         onClick={() => {
           deleteTask(task.taskname, idString);
         }}
       >
-        X
+        <h1><AiFillDelete /></h1>
       </button>
     </div>
   );

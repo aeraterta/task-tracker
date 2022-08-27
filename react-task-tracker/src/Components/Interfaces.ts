@@ -3,5 +3,5 @@ export interface ITask {
   taskname: string;
   taskdue? : string;
   isdone: boolean;
-  datedone?: string;
+  taskdone?: string;
 }
