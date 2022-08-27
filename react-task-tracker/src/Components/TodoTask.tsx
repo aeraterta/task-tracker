@@ -1,4 +1,5 @@
 import React, {ChangeEvent} from "react";
+import Checkbox from "./Checkbox";
 import { ITask } from "./Interfaces";
 
 interface Props {
@@ -11,20 +12,19 @@ const TodoTask = ({ task, deleteTask, checkBoxChange }: Props) => {
   let idString = String(task.id);
   let checkBoxName = 'checkBox' + String(idString);
 
-  let className = task.isdone? "task hello" : "task"
-  console.log(task);
   return (
-    <div className={className}>
+    <div className="task">
       <div className="content">
         <span>{task.taskname}</span>
         <span>{task.taskdue}</span>
       </div>
-      <input 
-        type="checkbox"  
-        name={checkBoxName} 
-        id={idString}  
-        onChange={checkBoxChange}
-      />
+      <Checkbox
+          name={checkBoxName} 
+          handleChange={checkBoxChange}
+
+          isChecked={task.isdone}
+          label={idString} 
+        />
       <button
         onClick={() => {
           deleteTask(task.taskname, idString);
@@ -34,6 +34,7 @@ const TodoTask = ({ task, deleteTask, checkBoxChange }: Props) => {
       </button>
     </div>
   );
+
 };
 
 export default TodoTask;

@@ -7,7 +7,6 @@ import Axios from 'axios'
 import NavigationComponent from "./Components/NavigationComponent";
 
 const App: FC = () => {
-  //var datenow = new Date().toLocaleDateString("en-CA");
 
   const [task, setTask] = useState<string>("");
   const [deadline, setDeadline] = useState("");
@@ -32,36 +31,41 @@ const App: FC = () => {
   };
 
   const checkBoxChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    console.log(event.target.id);
-  };
+    const link = 'http://localhost:5000/api/todo' + '/' + String(event.target.id)
+    Axios.put(link)
+    .then (res => {
+      //console.log(res.data);
+      setTodoList(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
+};
 
-  const addTask = async () => {
-    if (task === ""){
-      console.log("Empty task name");    
-    }
-    else {
-      try{
-        const newTask = { taskname: task, taskdue: deadline, isdone: false , datedone: ""};
-        const res = await Axios.post('http://localhost:5000/api/todo', newTask );
-        console.log(res.data);
-        let taskId = Number(res.data.id);
+const addTask = async () => {
+  if (task === ""){
+    console.log("Empty task name");    
+  }
+  else {
+    try{
+      const newTask = { taskname: task, taskdue: deadline, isdone: false , datedone: ""};
+      const res = await Axios.post('http://localhost:5000/api/todo', newTask );
+      console.log(res.data);
 
-        const taskContent = { id: taskId, taskname: task, taskdue: deadline, isdone: false , datedone: ""};
-        setTodoList([...todoList, taskContent]);
-        setTask("");
-        setDeadline("");
-      }catch (error){
-        let errorMessage = "";
-        if (error instanceof Error) {
-          errorMessage = error.message;
-          console.log(errorMessage);
-        }
-        else {
-          console.log(error);
-        }
+      setTodoList([...todoList, res.data]);
+      setTask("");
+      setDeadline("");
+    }catch (error){
+      let errorMessage = "";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        console.log(errorMessage);
+      }
+      else {
+        console.log(error);
       }
     }
-  };
+  }
+};
 
   const deleteTask = (taskNameToDelete: string, taskIdToDelete: string): void => {
     setTodoList(
