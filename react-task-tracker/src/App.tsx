@@ -6,6 +6,11 @@ import { ITask } from "./Components/Interfaces";
 import Axios from 'axios'
 import NavigationComponent from "./Components/NavigationComponent";
 
+const host = process.env.BACKEND_HOST || 'localhost';
+const port = process.env.BACKEND_PORT || 5000;
+let baseURL = `http://${host}:${port}/api`
+
+
 const App: FC = () => {
 
   const [task, setTask] = useState<string>("");
@@ -17,7 +22,7 @@ const App: FC = () => {
   }, [])
 
   useEffect(() => {
-    Axios.get('http://localhost:5000/api/todo')
+    Axios.get(`${baseURL}/todo`)
     .then (res => {
       console.log("Fetching data: ");
       setTodoList(res.data);
@@ -35,8 +40,7 @@ const App: FC = () => {
   };
 
   const checkBoxChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const link = 'http://localhost:5000/api/todo' + '/' + String(event.target.id)
-    Axios.put(link)
+    Axios.put(`${baseURL}/todo/${event.target.id}`)
     .then (res => {
       //console.log(res.data);
       setTodoList(res.data);
@@ -53,7 +57,7 @@ const addTask = async () => {
   else {
     try{
       const newTask = { taskname: task, taskdue: deadline, isdone: false , datedone: ""};
-      const res = await Axios.post('http://localhost:5000/api/todo', newTask );
+      const res = await Axios.post(`${baseURL}/todo`, newTask );
       console.log(res.data);
 
       setTodoList([...todoList, res.data]);
@@ -78,9 +82,8 @@ const addTask = async () => {
         return task.taskname !== taskNameToDelete;
       })
     );
-
-    const link = 'http://localhost:5000/api/todo' + '/' + taskIdToDelete
-    Axios.delete(link)
+    
+    Axios.delete(`${baseURL}/todo/${taskIdToDelete}`)
     .then (res => {
       console.log(res.data);
     }).catch(err => {
