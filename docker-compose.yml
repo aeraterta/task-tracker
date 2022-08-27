@@ -35,7 +35,7 @@ services:
   frontend:
     build: ./react-task-tracker
     ports:
-      - "3000:3000"
+      - "8000:3000"
     depends_on: 
       - tracker_api
     networks: 

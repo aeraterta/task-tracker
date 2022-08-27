@@ -13,6 +13,10 @@ const App: FC = () => {
   const [todoList, setTodoList] = useState<ITask[]>([]);
 
   useEffect(() => {
+    document.title = "Task Tracker App"
+  }, [])
+
+  useEffect(() => {
     Axios.get('http://localhost:5000/api/todo')
     .then (res => {
       console.log("Fetching data: ");
