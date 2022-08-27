@@ -1,4 +1,4 @@
-const pool = require('../db');
+const pool = require('../config/db');
 
 module.exports = {
     async getList(req, res) {
@@ -41,7 +41,6 @@ module.exports = {
         }
     },
     async completedTask(req, res) {
-        console.log(req.params);
 
         let date_ob = new Date();
         let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
@@ -54,17 +53,25 @@ module.exports = {
         let seconds = ("0" + date_ob.getSeconds()).slice(-2);
         let timenow = hours + ":" + minutes + ":" + seconds 
 
-        console.log(datenow);
-        console.log(timenow);
         let datetimeText = datenow + " " + timenow;
         
         try {
             const taskCheck = await pool.query("SELECT * FROM tasks WHERE id = $1",[req.params.id]);
             if (taskCheck.rows.length != 0){
-                const newTask = await pool.query("UPDATE tasks SET taskdone = $1, isdone = $2 WHERE id = $3",[datetimeText, true, req.params.id]);
-                //const newTask = await pool.query("DELETE FROM tasks WHERE id = $1",[req.params.id]);
-                res.status(200).send('Task done!');
-                console.log("Task done!"); 
+                if (taskCheck.rows[0].isdone === false){
+                    const newTask = await pool.query("UPDATE tasks SET taskdone = $1, isdone = $2 WHERE id = $3",[datetimeText, true, req.params.id]);
+                    
+                    //Temporarily return database contents as I need more time
+                    const taskList = await pool.query("SELECT * FROM tasks");
+                    res.status(200).send(taskList.rows);
+                    }
+                else {
+                    const newTask = await pool.query("UPDATE tasks SET taskdone = $1, isdone = $2 WHERE id = $3",[null, false, req.params.id]);
+                    
+                    //Temporarily return database contents as I need more time
+                    const taskList = await pool.query("SELECT * FROM tasks");
+                    res.status(200).send(taskList.rows);
+                }
             }
             else {
                 res.status(404).send('Can not find request task!');   
