@@ -42,39 +42,41 @@ const App: FC = () => {
   const checkBoxChange = (event: ChangeEvent<HTMLInputElement>): void => {
     Axios.put(`${baseURL}/todo/${event.target.id}`)
     .then (res => {
-      //console.log(res.data);
-      setTodoList(res.data);
+      const newItems = todoList.map(todoList => {
+        if (Number(event.target.id) === todoList.id) {
+          let stat = !todoList.isdone;
+          return { ...todoList, isdone: stat, tstamp: res.data}
+        }
+        return todoList;
+      });
+      setTodoList(newItems);
     }).catch(err => {
       console.log(err);
     })
-};
 
-const addTask = async () => {
-  if (task === ""){
-    console.log("Error: Empty task name!")  
-    alert("Error: Empty task name!");
-  }
-  else {
-    try{
-      const newTask = { taskname: task, taskdue: deadline, isdone: false , datedone: ""};
-      const res = await Axios.post(`${baseURL}/todo`, newTask );
-      console.log(res.data);
+  };
 
-      setTodoList([...todoList, res.data]);
-      setTask("");
-      setDeadline("");
-    }catch (error){
-      let errorMessage = "";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-        console.log(errorMessage);
-      }
-      else {
-        console.log(error);
+  const addTask = async () => {
+    if (task === ""){
+      console.log("Error: Empty task name!")  
+      alert("Error: Empty task name!");
+    }else{
+      if (new Date(deadline) < new Date()) {
+        alert("Error: Cannot set passed date!");
+      }else {
+        const newTask = { taskname: task, taskdue: deadline, isdone: false , tstamp: null};
+        Axios.post(`${baseURL}/todo`, newTask )
+        .then (res => {
+          setTodoList([...todoList, res.data]);
+          setTask("");
+          setDeadline("");
+        }).catch(err => {
+          console.log(err);
+        })
       }
     }
-  }
-};
+
+  };
 
   const deleteTask = (taskNameToDelete: string, taskIdToDelete: string): void => {
     setTodoList(
@@ -82,10 +84,9 @@ const addTask = async () => {
         return task.taskname !== taskNameToDelete;
       })
     );
-    
     Axios.delete(`${baseURL}/todo/${taskIdToDelete}`)
     .then (res => {
-      console.log(res.data);
+      //console.log(res.data);
     }).catch(err => {
       console.log(err);
     })
@@ -122,7 +123,6 @@ const addTask = async () => {
       <div className="todoList">
         <h1>Tasks List: </h1>
         {todoList.length !== 0 ? (
-          // <p>Here1</p>
           todoList.map((task: ITask, key: number) => {
             return <TodoTask key={key} task={task} checkBoxChange={checkBoxChange} deleteTask={deleteTask} />;
         })

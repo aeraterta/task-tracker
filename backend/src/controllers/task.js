@@ -2,19 +2,22 @@ const pool = require('../config/db');
 
 module.exports = {
     async getList(req, res) {
+        //Get all rows in tasks table
         const taskList = await pool.query("SELECT * FROM tasks");
         res.status(200).send(taskList.rows);
     },
     async addTask(req, res) {
-        //console.log(req.body);
         try {
+
+            //Check if task exists in tasks table via taskname query
             const taskCheck = await pool.query("SELECT taskname FROM tasks WHERE taskname = $1",[req.body.taskname]);
             if (taskCheck.rows.length != 0){
                 res.status(409).send('Duplicate Content!');   
                 console.log("Duplicate Content!"); 
             }
             else {
-                const newTask = await pool.query("INSERT INTO tasks (taskname,taskdue,isdone,taskdone) VALUES ($1, $2, $3, $4) RETURNING *",[req.body.taskname, req.body.taskdue, req.body.isdone, req.body.taskdone]);
+                //Add new task entry into tasks table
+                const newTask = await pool.query("INSERT INTO tasks (taskname,taskdue,isdone,tstamp) VALUES ($1, $2, $3, $4) RETURNING *",[req.body.taskname, req.body.taskdue, req.body.isdone, req.body.tstamp]);
                 res.status(200).send(newTask.rows[0]);
                 console.log("Task added!"); 
             }
@@ -25,7 +28,9 @@ module.exports = {
     },
     async deleteTask(req, res) {
         try {
+            //Check if task exists in tasks table via id query
             const taskCheck = await pool.query("SELECT * FROM tasks WHERE id = $1",[req.params.id]);
+
             if (taskCheck.rows.length != 0){
                 const newTask = await pool.query("DELETE FROM tasks WHERE id = $1",[req.params.id]);
                 res.status(200).send('Task deleted!');
@@ -42,35 +47,19 @@ module.exports = {
     },
     async completedTask(req, res) {
 
-        let date_ob = new Date();
-        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-        let date = ("0" + date_ob.getDate()).slice(-2);
-        let year = date_ob.getFullYear();
-        let datenow = year + "-" + month + "-" + date 
-
-        let hours = ("0" + date_ob.getHours()).slice(-2);
-        let minutes = ("0" + date_ob.getMinutes()).slice(-2);
-        let seconds = ("0" + date_ob.getSeconds()).slice(-2);
-        let timenow = hours + ":" + minutes + ":" + seconds 
-
-        let datetimeText = datenow + " " + timenow;
-        
         try {
+            //Check if task exists in tasks table via id query
             const taskCheck = await pool.query("SELECT * FROM tasks WHERE id = $1",[req.params.id]);
+            
+            let tStamp = new Date();
             if (taskCheck.rows.length != 0){
                 if (taskCheck.rows[0].isdone === false){
-                    const newTask = await pool.query("UPDATE tasks SET taskdone = $1, isdone = $2 WHERE id = $3",[datetimeText, true, req.params.id]);
-                    
-                    //Temporarily return database contents as I need more time
-                    const taskList = await pool.query("SELECT * FROM tasks");
-                    res.status(200).send(taskList.rows);
+                    const newTask = await pool.query("UPDATE tasks SET isdone = $1, tstamp = $2 WHERE id = $3",[true, tStamp, req.params.id]);                 
+                    res.status(200).send(tStamp);
                     }
                 else {
-                    const newTask = await pool.query("UPDATE tasks SET taskdone = $1, isdone = $2 WHERE id = $3",[null, false, req.params.id]);
-                    
-                    //Temporarily return database contents as I need more time
-                    const taskList = await pool.query("SELECT * FROM tasks");
-                    res.status(200).send(taskList.rows);
+                    const newTask = await pool.query("UPDATE tasks SET isdone = $1, tstamp = $2 WHERE id = $3",[ false, null, req.params.id]);
+                    res.status(200).send(null);
                 }
             }
             else {

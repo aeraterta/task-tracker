@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 	taskname varchar NOT NULL,
 	taskdue varchar NULL,
 	isdone bool NULL,
-	taskdone varchar NULL
+	tstamp timestamptz
 );
 ```
 ### Docker Usage

@@ -13,6 +13,14 @@ interface Props {
 const TodoTask = ({ task, deleteTask, checkBoxChange }: Props) => {
   let idString = String(task.id);
   let checkBoxName = 'checkBox' + String(idString);
+  let timeStamp;
+
+  if (task.isdone){
+    let dte = new Date(task.tstamp).toLocaleDateString("en-CA", {timeZone: "Asia/Chongqing"});
+    let tme = new Date(task.tstamp).toLocaleTimeString("en-CA", { hour12: false });
+    timeStamp = dte + " " + tme
+  } 
+
   return (
     <div className="task">
       <Checkbox
@@ -35,7 +43,7 @@ const TodoTask = ({ task, deleteTask, checkBoxChange }: Props) => {
 
         <div className="contentItems">
           <label>Done: </label>
-          <div>{task.taskdone}</div>
+          <div>{timeStamp}</div>
         </div>
         
       </div>
