@@ -2,9 +2,13 @@ const pool = require('../config/db');
 
 module.exports = {
     async getList(req, res) {
-        //Get all rows in tasks table
-        const taskList = await pool.query("SELECT * FROM tasks");
-        res.status(200).send(taskList.rows);
+        try {
+            const taskList = await pool.query("SELECT * FROM tasks");
+            res.status(200).send(taskList.rows);
+        }catch (err) {
+            res.status(400).send(err.message);
+            console.error(err.message);
+        }
     },
     async addTask(req, res) {
         try {
