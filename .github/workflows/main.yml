@@ -16,3 +16,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERUN }}
           password: ${{ secrets.DOCKERPW }}
+
+      - name: Build the Docker image
+        run: docker build . --file docker-compose --tag ${{ secrets.DOCKERUN }}/task-tracker
