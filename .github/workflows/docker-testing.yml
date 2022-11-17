@@ -15,7 +15,7 @@ jobs:
         run: docker login --username '${{secrets.DOCKERUN}}' --password '${{secrets.DOCKERPW}}'
 
       - name: Build the Docker image
-        run: docker build ./backend '${{secrets.DOCKERUN}}'/tracker-api:'${{github.sha}}' .
+        run: docker build ./backend '${{secrets.DOCKERUN}}'/tracker-api:'${{github.sha}}'
         
       - name: Docker Push
         run: docker push '${{secrets.DOCKERUN}}'/tracker-api:'${{github.sha}}'
