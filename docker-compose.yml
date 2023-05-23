@@ -10,8 +10,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=todolist
       - POSTGRES_DB=postgres
-    networks: 
-      - tracker
     volumes:
       - ./postgres-table-init.sql:/docker-entrypoint-initdb.d/postgres-table-init.sql
 
@@ -29,8 +27,6 @@ services:
       - DATABASE=postgres
       - PASSWORD=todolist
       - PORT=5432
-    networks: 
-      - tracker
 
   frontend:
     build: ./react-task-tracker
@@ -38,8 +34,6 @@ services:
       - "8000:3000"
     depends_on: 
       - tracker_api
-    networks: 
-      - tracker 
 
 networks: 
   tracker:
