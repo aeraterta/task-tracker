@@ -32,12 +32,11 @@ function LoginPage() {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
 
-    api.post('/token', data, headers)
+    api.post('/auth/token', data, headers)
     .then(response => {
-      const token = response.data.access_token
+      const token = response.data.token
       localStorage.setItem('token', token);
       setToken(token)
-      //setAuth({ username, password, token});
       setUsername('');
       setPassword('');
 
@@ -51,6 +50,7 @@ function LoginPage() {
       }, 1500); // Wait for 1.5 seconds before redirecting
     })
     .catch(error => {
+      console.log(error)
       if (error.response.status === 401) {
         setLogsMessage('<b>Wrong Credentials</b><br /> Invalid username or password.');
       }
@@ -59,7 +59,7 @@ function LoginPage() {
   };
 
   if (isLoggedIn) {
-    return <Navigate to="/Home" replace />;
+    return <Navigate to="/landing-page" replace />;
   }
 
   return (
