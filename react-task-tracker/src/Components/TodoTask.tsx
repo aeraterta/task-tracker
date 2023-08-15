@@ -1,6 +1,6 @@
 import React, {ChangeEvent} from "react";
-import Checkbox from "./Checkbox";
-import { ITask } from "./Interfaces";
+import Checkbox from './Checkbox';
+import { ITask } from './Interfaces';
 import { AiFillDelete } from 'react-icons/ai';
 
 interface Props {
