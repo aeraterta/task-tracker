@@ -1,4 +1,5 @@
 site_name: Task Tracker Application
+site_url: https://aeraterta.github.io/task-tracker/
 theme:
   name: material
   features:
