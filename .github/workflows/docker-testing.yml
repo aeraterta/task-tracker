@@ -4,6 +4,9 @@ on:
   push:
     branches: ['main']
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,4 +22,18 @@ jobs:
         
       - name: Docker Push
         run: docker push '${{secrets.DOCKERUN}}'/tracker-api:'${{github.sha}}'
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - uses: actions/cache@v2
+        with:
+          key: ${{ github.ref }}
+          path: .cache
+      - run: pip install mkdocs-material
+      - run: mkdocs gh-deploy --force
 

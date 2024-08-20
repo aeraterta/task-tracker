@@ -3,16 +3,13 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import Privacy from "./routes/privacy";
-import Tos from "./routes/tos";
+
 
 ReactDOM.render(
   <React.StrictMode>
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="privacy" element={<Privacy />} />
-      <Route path="tos" element={<Tos />} />
+      <Route path="/*" element={<App />} />
     </Routes>
   </BrowserRouter>
   </React.StrictMode>,

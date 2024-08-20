@@ -1,4 +1,4 @@
-import HomeNavigation from "../Components/HomeNavigation";
+import HomeNavigation from "../components/HomeNavigation";
 
 export default function Tos() {
     return (
