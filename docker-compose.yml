@@ -4,21 +4,23 @@ services:
   
   db:
     image: postgres:14-alpine
+    container_name: task-tracker-db
     ports:
       - "5433:5432"
     environment: 
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=todolist
       - POSTGRES_DB=postgres
-    networks: 
-      - tracker
     volumes:
       - ./postgres-table-init.sql:/docker-entrypoint-initdb.d/postgres-table-init.sql
+    networks:
+      - tracker_network
 
   tracker_api:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: task-tracker-tracker_api
     ports:
       - "5000:5000"
     depends_on: 
@@ -29,17 +31,19 @@ services:
       - DATABASE=postgres
       - PASSWORD=todolist
       - PORT=5432
-    networks: 
-      - tracker
+    networks:
+      - tracker_network
 
   frontend:
     build: ./react-task-tracker
+    container_name: task-tracker-frontend
     ports:
       - "8000:3000"
     depends_on: 
       - tracker_api
-    networks: 
-      - tracker 
+    networks:
+      - tracker_network
 
 networks: 
-  tracker:
+  tracker_network:
+    driver: bridge
